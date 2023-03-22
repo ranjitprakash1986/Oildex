@@ -98,6 +98,7 @@ def plot_normalized_lineplots(year_range):
             y="value",
             color="variable:N",
         )
+        .properties(width=250, height=300)
     )
 
     return plot.to_html()
@@ -136,8 +137,10 @@ def plot_oilprice_rigcount(year_range):
     )
 
     # Combine the two plots
-    plot = alt.layer(plot_oil, plot_rigcount).resolve_scale(
-        y="independent"  # make the y-axes independent
+    plot = (
+        alt.layer(plot_oil, plot_rigcount)
+        .resolve_scale(y="independent")  # make the y-axes independent
+        .properties(width=300, height=300)
     )
 
     return plot.to_html()
@@ -176,8 +179,10 @@ def plot_oilprice_slb(year_range):
     )
 
     # Combine the two plots
-    plot = alt.layer(plot_oil, plot_slb).resolve_scale(
-        y="independent"  # make the y-axes independent
+    plot = (
+        alt.layer(plot_oil, plot_slb)
+        .resolve_scale(y="independent")  # make the y-axes independent
+        .properties(width=300, height=300)
     )
 
     return plot.to_html()
@@ -201,10 +206,10 @@ def plot_market_rigcount(year_range, market):
         .mark_bar()
         .encode(
             y="mean(Rig Count)",
-            x="Year",
+            x="Year:N",
             color="Location",
         )
-    )
+    ).properties(width=350, height=350)
 
     return plot.to_html()
 
@@ -382,7 +387,7 @@ app.layout = dbc.Container(
         ),
         html.Br(),
     ],
-    fluid=False,
+    fluid=True,
 )
 
 
