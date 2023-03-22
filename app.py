@@ -1,11 +1,13 @@
 # imports
 from dash import dash, html, dcc, Input, Output
+import dash_bootstrap_components as dbc
 
 import pandas as pd
 import numpy as np
 import altair as alt
+import plotly.express as px
 
-external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -212,23 +214,24 @@ def plot_market_rigcount(year_range, market):
 # -----------------------------------------
 # Layout
 
-app.layout = html.Div(
+h1_style = {"font-size": "42px", "color": "blue", "text-align": "center"}
+h2_style = {"font-size": "18px", "color": "black", "text-align": "left"}
+app.layout = dbc.Container(
     [
-        html.H1("Oildex", style={"text-align": "center"}),
-        html.Div(
+        dbc.Row(
             [
-                html.P(
-                    "A Dashboard insight on Oil Economy", style={"text-align": "center"}
+                html.H1(
+                    "Oil Market Dashboard",
+                    style=h1_style,
                 )
             ]
         ),
+        dbc.Row([html.P("An overview of the Oil Economy", style=h2_style)]),
         html.Br(),
-        # TBD: Improve slider granularity of range
         # Add Widget - Select year range
-        html.Div([html.P("Another line")]),
-        html.Div(
+        dbc.Row(
             [
-                "Select Year",
+                "Select Year Range",
                 dcc.RangeSlider(
                     min=1986,
                     max=2023,
@@ -247,75 +250,145 @@ app.layout = html.Div(
                     },
                     id="select_year_slider",
                 ),
+            ],
+        ),
+        html.Br(),
+        # Add 3 LinePlots in one row
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        # Oil price and Rig count Line plot
+                        html.Div(
+                            [
+                                "Oil Price vs Worldwide Rig Count",
+                                html.Iframe(
+                                    id="oilprice_lineplot",
+                                    srcDoc=plot_oilprice_rigcount(
+                                        year_range=[1986, 2000]
+                                    ),
+                                    style={
+                                        "border-width": "0",
+                                        "width": "100%",
+                                        "height": "400px",
+                                    },
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                dbc.Col(
+                    [
+                        # Oil price vs SLB stock price
+                        html.Div(
+                            [
+                                "Oil Price vs SLB Stock price",
+                                html.Iframe(
+                                    id="oilprice_slb_lineplot",
+                                    srcDoc=plot_oilprice_slb(year_range=[1986, 2000]),
+                                    style={
+                                        "border-width": "0",
+                                        "width": "100%",
+                                        "height": "400px",
+                                    },
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                dbc.Col(
+                    [
+                        # Normalized lineplots
+                        html.Div(
+                            [
+                                "Normalized Price comparison",
+                                html.Iframe(
+                                    id="normalized_lineplots",
+                                    srcDoc=plot_normalized_lineplots(
+                                        year_range=[1986, 2000]
+                                    ),
+                                    style={
+                                        "border-width": "0",
+                                        "width": "100%",
+                                        "height": "400px",
+                                    },
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        ),
+        # Add the checklists
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.Div([html.P("Select Region")]),
+                        html.Div(
+                            [
+                                dcc.Checklist(
+                                    id="market_checklist",
+                                    options=[
+                                        {"label": "Africa", "value": "Africa"},
+                                        {
+                                            "label": "Asia Pacific",
+                                            "value": "Asia Pacific",
+                                        },
+                                        {"label": "Canada", "value": "Canada"},
+                                        {"label": "Europe", "value": "Europe"},
+                                        {
+                                            "label": "Latin America",
+                                            "value": "Latin America",
+                                        },
+                                        {
+                                            "label": "Middle East",
+                                            "value": "Middle East",
+                                        },
+                                        {"label": "United States", "value": "U.S."},
+                                    ],
+                                    value=["U.S."],
+                                    labelStyle={
+                                        "display": "block",
+                                        "cursor": "pointer",
+                                        "margin-left": "20px",
+                                    },
+                                ),
+                            ],
+                            style={"padding-top": "1px"},
+                        ),
+                    ]
+                ),
+                dbc.Col(
+                    [
+                        # Market bar plot
+                        html.Div(
+                            [
+                                "Stacked Barplot of Rig Count by Region",
+                                html.Iframe(
+                                    id="market_rigcount_stackedbars",
+                                    srcDoc=plot_market_rigcount(
+                                        year_range=[1986, 2000], market=["U.S."]
+                                    ),
+                                    style={
+                                        "border-width": "0",
+                                        "width": "100%",
+                                        "height": "400px",
+                                    },
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
             ]
         ),
         html.Br(),
-        # TBD Widget - All markets option
-        # Add Widget - Select Markets Checkbox
-        html.Div([html.P("Select Markets")]),
-        html.Div(
-            [
-                dcc.Checklist(
-                    id="market_checklist",
-                    options=[
-                        {"label": "Africa", "value": "Africa"},
-                        {"label": "Asia Pacific", "value": "Asia Pacific"},
-                        {"label": "Canada", "value": "Canada"},
-                        {"label": "Europe", "value": "Europe"},
-                        {"label": "Latin America", "value": "Latin America"},
-                        {"label": "Middle East", "value": "Middle East"},
-                        {"label": "United States", "value": "U.S."},
-                    ],
-                    value=["U.S."],
-                )
-            ]
-        ),
-        # Oil price and Rig count Line plot
-        html.Div(
-            [
-                html.Iframe(
-                    id="oilprice_lineplot",
-                    srcDoc=plot_oilprice_rigcount(year_range=[1986, 2000]),
-                    style={"border-width": "0", "width": "100%", "height": "400px"},
-                )
-            ]
-        ),
-        # Market bar plot
-        html.Div(
-            [
-                html.Iframe(
-                    id="market_rigcount_stackedbars",
-                    srcDoc=plot_market_rigcount(
-                        year_range=[1986, 2000], market=["U.S."]
-                    ),
-                    style={"border-width": "0", "width": "100%", "height": "400px"},
-                )
-            ]
-        ),
-        # Oil price vs SLB stock price
-        html.Div(
-            [
-                html.Iframe(
-                    id="oilprice_slb_lineplot",
-                    srcDoc=plot_oilprice_slb(year_range=[1986, 2000]),
-                    style={"border-width": "0", "width": "100%", "height": "400px"},
-                )
-            ]
-        ),
-        # Normalized lineplots
-        html.Div(
-            [
-                html.Iframe(
-                    id="normalized_lineplots",
-                    srcDoc=plot_normalized_lineplots(year_range=[1986, 2000]),
-                    style={"border-width": "0", "width": "100%", "height": "400px"},
-                )
-            ]
-        ),
-    ]
+    ],
+    fluid=False,
 )
 
 
+# all callbacks
 @app.callback(
     Output("oilprice_lineplot", "srcDoc"),  # Output(id , argument)
     Input("select_year_slider", "value"),  # Input(id , argument)
