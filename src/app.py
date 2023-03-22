@@ -420,5 +420,4 @@ def update_normalized_lineplots(year_range):
     return plot_normalized_lineplots(year_range)
 
 
-if __name__ == "__main__":
-    app.run_server(debug=True)
+server = app.server
