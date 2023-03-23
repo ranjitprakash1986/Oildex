@@ -6,7 +6,7 @@
 
 ### Usage
 
-The objective of this dashboard is to enable an executive or any investor interested in Schlumberger (SLB) to get an immediate overview of the Oil market within a specific selected year range. It also enables to compare the Oil prices with the SLB and the S&P 500 stock prices.  
+The objective of this dashboard is to enable an executive or any investor interested in Schlumberger (SLB) to get an immediate overview of the Oil market within a specific selected year range. It also enables to compare the Oil prices with the SLB and the S&P 500 stock prices. Please see this detailed [proposal](docs/proposal.md) for more information on the motivation and description of the data.  
 
 The Dashboard page presents the user with widgets to select the year range of interest between 1986 - 2022 at the top. The selected year range filters the lineplots which reveal the trends in Oil price movement with changes in the drilling activity represented by Rig Count. The next line plot compares the trend of Oil price with SLB stock price. Due to the varying scales of prices, a third plot shows the normalized prices of Oil, SLB stock, S&P500 stock index. This enables the user to see the changes in trend on an even scale.
 
