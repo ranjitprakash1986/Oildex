@@ -53,7 +53,7 @@ The data for this Dashboard is pulled from four sources
 * [SLB Price]("https://ca.investing.com/equities/schlumberger-ltd-historical-data")
 * [Rig Count]("https://rigcount.bakerhughes.com/intl-rig-count")
 
-The code for cleaning and coercing the data for the visualization can be found [here](src/code)
+The code for cleaning and coercing the data for the visualization can be found [here](https://github.com/ranjitprakash1986/Oildex/blob/main/src/code.ipynb)
 
 The software and associated documentation files are licensed under the MIT License. You may find a copy of the license at [LICENSE](https://github.com/ranjitprakash1986/Oildex/blob/main/LICENSE).
 
