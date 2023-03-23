@@ -188,7 +188,7 @@ def plot_oilprice_slb(year_range):
     return plot.to_html()
 
 
-# TBD consistent color scheme for stacked bars
+# stacked bars
 def plot_market_rigcount(year_range, market):
 
     df_long = pivot_longer()
@@ -209,7 +209,7 @@ def plot_market_rigcount(year_range, market):
             x="Year:N",
             color="Location",
         )
-    ).properties(width=350, height=350)
+    ).properties(width=350, height=300)
 
     return plot.to_html()
 
@@ -224,12 +224,29 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 html.H1(
-                    "Oil Market Dashboard",
+                    "Oildex Dashboard",
                     style=h1_style,
                 )
             ]
         ),
-        dbc.Row([html.P("An overview of the Oil Economy", style=h2_style)]),
+        html.Br(),
+        dbc.Row(
+            [
+                html.P(
+                    "Essential indicators of the health of the Oil industry include Drilling activity (represented in active Rig Counts) and Oil Price (USD). These factors can be evaluated in the context of the S&P 500 market index. This Dashboard provides an overview of the Oil economy with the Schlumberger (SLB) and S&P 500 prices in context.",
+                    style=h2_style,
+                )
+            ]
+        ),
+        html.Br(),
+        dbc.Row(
+            [
+                html.P(
+                    "Insight: While Oil price and SLB stock prices are correlated, the S&P 500 price is nearly immune to the fluctuations in the Oil Industry",
+                    style=h2_style,
+                )
+            ]
+        ),
         html.Br(),
         # Add Widget - Select year range
         dbc.Row(
@@ -360,7 +377,8 @@ app.layout = dbc.Container(
                             ],
                             style={"padding-top": "1px"},
                         ),
-                    ]
+                    ],
+                    md=4,
                 ),
                 dbc.Col(
                     [
@@ -425,4 +443,6 @@ def update_normalized_lineplots(year_range):
     return plot_normalized_lineplots(year_range)
 
 
-server = app.server
+if __name__ == "__main__":
+    app.run_server(debug=True)
+# server = app.server
